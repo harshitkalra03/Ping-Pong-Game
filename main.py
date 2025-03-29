@@ -2,7 +2,6 @@ from turtle import Screen
 from paddle import Paddle
 from ball import Ball
 from scoreboard import Scoreboard
-import math
 import random
 
 CANVAS_HEIGHT = 600
@@ -11,7 +10,8 @@ CANVAS_COLOR = "black"
 
 GAME_ON = True
 
-ball_direction = random.randint(0, 360)
+ball_direction = random.randint(-180, 180)
+
 canvas = Screen()
 canvas.setup(width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
 canvas.bgcolor(CANVAS_COLOR)
@@ -38,11 +38,18 @@ canvas.onkeypress(fun = right_paddle.move_down, key = "Down")
 while GAME_ON:
     canvas.update()
     pong_ball.move_ball(theta = ball_direction)
+    
     if pong_ball.ycor() >= 290 or pong_ball.ycor() <= -290:
-        ball_direction = math.pi - pong_ball.heading()
+        ball_direction = (360 - pong_ball.heading())       
 
-    if (pong_ball.xcor() >=340 and pong_ball.xcor() <=350) or (pong_ball.xcor() <= -340 and pong_ball.xcor() >=-350):
-        if (pong_ball.ycor() <= right_paddle.ycor() + 50 and pong_ball.ycor() >= right_paddle.ycor() -50) or (pong_ball.ycor() <= left_paddle.ycor() + 50 and pong_ball.ycor() >= left_paddle.ycor() -50):
-            ball_direction = math.pi - pong_ball.heading()
+    if (pong_ball.xcor() >=340 and pong_ball.xcor() <=350):
+        if pong_ball.distance(right_paddle) < 50:       
+            pong_ball.setx(340)                   
+            ball_direction = (180 - pong_ball.heading())    
 
+    if (pong_ball.xcor() <=-340 and pong_ball.xcor() >=-350):
+        if pong_ball.distance(left_paddle) < 50:       
+            pong_ball.setx(-340)                     
+            ball_direction = (180 - pong_ball.heading())    
+            
 canvas.exitonclick()    
