@@ -1,6 +1,7 @@
 from turtle import Screen
 from paddle import Paddle
 from ball import Ball
+from arena import Arena
 from scoreboard import Scoreboard
 import random
 
@@ -26,7 +27,13 @@ right_paddle.move_to(x = 350, y = 0)
 
 pong_ball = Ball()
 
+arena = Arena()
+arena.seperator()
+arena.create_border()
 canvas.update()
+
+scoreboard = Scoreboard()
+scoreboard.update_score()
 
 canvas.listen()
 
@@ -40,16 +47,41 @@ while GAME_ON:
     pong_ball.move_ball(theta = ball_direction)
     
     if pong_ball.ycor() >= 290 or pong_ball.ycor() <= -290:
-        ball_direction = (360 - pong_ball.heading())       
+        ball_direction = (360 - pong_ball.heading()) 
+        canvas.update()     
 
     if (pong_ball.xcor() >=340 and pong_ball.xcor() <=350):
         if pong_ball.distance(right_paddle) < 50:       
             pong_ball.setx(340)                   
-            ball_direction = (180 - pong_ball.heading())    
+            ball_direction = (180 - pong_ball.heading())
+            scoreboard.P2_score += 1
+            scoreboard.update_score()
+            canvas.update()   
 
     if (pong_ball.xcor() <=-340 and pong_ball.xcor() >=-350):
         if pong_ball.distance(left_paddle) < 50:       
             pong_ball.setx(-340)                     
-            ball_direction = (180 - pong_ball.heading())    
+            ball_direction = (180 - pong_ball.heading()) 
+            scoreboard.P1_score += 1
+            scoreboard.update_score()
+            canvas.update()
+
+    if pong_ball.xcor() > 400:
+        pong_ball.home()
+        canvas.update() 
+        pong_ball.ball_flash(screen=canvas)
+        canvas.update()
+        ball_direction = random.randint(-180, 180)
+        scoreboard.P2_score -= 1
+        scoreboard.update_score()
+
+    if pong_ball.xcor() < -400:
+        pong_ball.home()
+        canvas.update() 
+        pong_ball.ball_flash(screen=canvas)
+        canvas.update()
+        ball_direction = random.randint(-180, 180)
+        scoreboard.P1_score -= 1
+        scoreboard.update_score()
             
 canvas.exitonclick()    

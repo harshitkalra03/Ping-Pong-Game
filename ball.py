@@ -1,5 +1,5 @@
 from turtle import Turtle
-
+import time
 class Ball(Turtle):
     def __init__(self):
         super().__init__()
@@ -16,3 +16,13 @@ class Ball(Turtle):
         self.penup()
         self.setheading(theta)
         self.fd(self.speed_value)
+
+    def ball_flash(self, screen):
+        for i in range(5):
+            self.ht()
+            screen.update()
+            time.sleep(0.1)
+            self.st()
+            screen.update()
+            time.sleep(0.1)
+        pass
