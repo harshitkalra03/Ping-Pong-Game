@@ -29,14 +29,3 @@ class Arena(Turtle):
             self.fd(570)
             self.right(90)
         self.penup()
-        
-    # def update_scoreboard(self):
-    #     self.clear()
-    #     self.goto(-100, 260)
-    #     self.pendown()
-    #     self.write(arg = f"Player 1: {self.P1_score}", move = False, align = "center", font = ("Arial", 20, "normal"))
-    #     self.penup()
-    #     self.goto(100, 260)
-    #     self.pendown()
-    #     self.write(arg = f"Player 2: {self.P2_score}", move = False, align = "center", font = ("Arial", 20, "normal")) 
-    #     self.penup()

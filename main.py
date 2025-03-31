@@ -3,6 +3,7 @@ from paddle import Paddle
 from ball import Ball
 from arena import Arena
 from scoreboard import Scoreboard
+import time
 import random
 
 CANVAS_HEIGHT = 600
@@ -10,8 +11,6 @@ CANVAS_WIDTH = 800
 CANVAS_COLOR = "black"
 
 GAME_ON = True
-
-ball_direction = random.randint(-180, 180)
 
 canvas = Screen()
 canvas.setup(width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
@@ -36,52 +35,32 @@ scoreboard = Scoreboard()
 scoreboard.update_score()
 
 canvas.listen()
-
 canvas.onkeypress(fun = left_paddle.move_up, key = "w")
 canvas.onkeypress(fun = left_paddle.move_down, key = "s")
 canvas.onkeypress(fun = right_paddle.move_up, key = "Up")
 canvas.onkeypress(fun = right_paddle.move_down, key = "Down")
 
 while GAME_ON:
+    time.sleep(pong_ball.speed_value)
     canvas.update()
-    pong_ball.move_ball(theta = ball_direction)
-    
-    if pong_ball.ycor() >= 290 or pong_ball.ycor() <= -290:
-        ball_direction = (360 - pong_ball.heading()) 
+    pong_ball.move_ball()
+  
+    if pong_ball.ycor() >= 280 or pong_ball.ycor() <= -270:
+        pong_ball.bounce_y()
         canvas.update()     
 
-    if (pong_ball.xcor() >=340 and pong_ball.xcor() <=350):
-        if pong_ball.distance(right_paddle) < 50:       
-            pong_ball.setx(340)                   
-            ball_direction = (180 - pong_ball.heading())
-            scoreboard.P2_score += 1
-            scoreboard.update_score()
-            canvas.update()   
-
-    if (pong_ball.xcor() <=-340 and pong_ball.xcor() >=-350):
-        if pong_ball.distance(left_paddle) < 50:       
-            pong_ball.setx(-340)                     
-            ball_direction = (180 - pong_ball.heading()) 
-            scoreboard.P1_score += 1
-            scoreboard.update_score()
-            canvas.update()
+    if (pong_ball.distance(right_paddle)<50 and pong_ball.xcor() > 320) or (pong_ball.distance(left_paddle)<50 and pong_ball.xcor() < -320):
+        pong_ball.bounce_x()
+        canvas.update()
 
     if pong_ball.xcor() > 400:
-        pong_ball.home()
-        canvas.update() 
+        pong_ball.reset_position()
         pong_ball.ball_flash(screen=canvas)
-        canvas.update()
-        ball_direction = random.randint(-180, 180)
-        scoreboard.P2_score -= 1
-        scoreboard.update_score()
+        scoreboard.l_point()
 
     if pong_ball.xcor() < -400:
-        pong_ball.home()
-        canvas.update() 
+        pong_ball.reset_position()
         pong_ball.ball_flash(screen=canvas)
-        canvas.update()
-        ball_direction = random.randint(-180, 180)
-        scoreboard.P1_score -= 1
-        scoreboard.update_score()
-            
+        scoreboard.r_point()
+
 canvas.exitonclick()    
